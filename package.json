@@ -3,11 +3,14 @@
   "version": "1.0.0",
   "description": "trabalho final",
   "main": "index.js",
+  "author": "Tatiane A. Nicchetti",
+  "license": "ISC",
   "scripts": {
     "dev": "ts-node-dev src/index.ts"
   },
-  "author": "Tatiane A. Nicchetti",
-  "license": "ISC",
+  "prisma": {
+    "seed": "ts-node prisma/seed.ts"
+  },
   "devDependencies": {
     "@types/express": "^4.17.14",
     "@types/http-errors": "^2.0.1",

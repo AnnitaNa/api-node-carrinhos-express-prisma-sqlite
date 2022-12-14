@@ -13,17 +13,36 @@ datasource db {
 model User {
   id Int @id @default(autoincrement())
   userName String @unique
+  email String @unique
   password String
+  carts Cart[]
 }
 
 model Product {
   id String @id
-  description String
+  description String @unique
   price Decimal
+  brand String
+  qtd Int
+  cartItems CartItems[]
+}
+
+model Cart {
+  id String @id
+  total Decimal
+  userId Int 
+  user User @relation(fields: [userId], references: [id])
+  items CartItems []
+}
+
+model CartItems {
+  id String @id
+  cartId String
+  cart Cart @relation(fields: [cartId], references: [id])
+  productId String
+  product Product @relation(fields: [productId], references: [id])
   qtd Int
 }
 
-// model Purchase {
-//   id String @id
-// }
+
 

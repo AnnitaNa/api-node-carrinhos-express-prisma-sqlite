@@ -36,3 +36,18 @@ after creating your schema, run to push it to the database
 ```bash
 npx prisma db push
 ```
+
+migration and seeders
+
+1) create a seeder file inside prisma folder
+2) on package.json add:
+```json
+"prisma": {
+    "seed": "ts-node prisma/seed.ts"
+},
+```
+   when you migrate for the first time, it will also seed your database
+
+```bash
+npx prisma migrate dev --name migration-name
+```

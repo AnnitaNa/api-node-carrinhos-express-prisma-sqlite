@@ -19,7 +19,7 @@ export class ProductService {
         return new OK(product)
     }
 
-    async create({description, price, qtd}: Omit<Product, 'id'>): Promise<ResponseBody<Product> | null> {
+    async create({description, price, brand, qtd}: Omit<Product, 'id'>): Promise<ResponseBody<Product> | null> {
 
         const productExists = await this.findProduct({description});
 
@@ -30,6 +30,7 @@ export class ProductService {
                 id: v4(),
                 description, 
                 price, 
+                brand,
                 qtd
             }
         })

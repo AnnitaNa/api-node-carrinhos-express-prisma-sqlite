@@ -9,6 +9,8 @@ export const productCreateValidation = [
     body('qtd')
         .notEmpty().withMessage("Please input a qtd")
         .isDecimal().withMessage("it need to be decimal"),
+    body('brand')
+        .notEmpty().withMessage("Please input a brand"),
 ]
 
 export const productIdValidation = [
@@ -16,4 +18,4 @@ export const productIdValidation = [
         .notEmpty().withMessage("You must send an id at the query")
 ]
 
-export const productUpdateValidation = [productIdValidation, ...productCreateValidation]
+export const productUpdateValidation = [...productIdValidation, ...productCreateValidation]

@@ -11,11 +11,12 @@ userRoutes.get("/", async (req: Request, res: Response) => {
 })
 
 userRoutes.post("/", async (req: Request, res: Response) => {
-    const {userName, password} = req.body
+    const {userName, password, email} = req.body
     const user = await prisma.user.create({
         data: {
             userName,
-            password
+            password,
+            email
         }
     })
     res.send(user)
