@@ -3,16 +3,11 @@ import { v4 } from "uuid";
 
 const prisma = new PrismaClient()
 
-const product1Id = v4();
-const product2Id = v4();
+const product1Id = 'fbfb89f4-ede8-4c12-a37b-69e043dd8194';
+const product2Id = '2134a357-1a0d-4294-b74a-940537ae6b4d';
 
 
-async function main() {
-
-//*******************************************************************
-//************************** PRODUCTS *******************************
-//*******************************************************************
-
+async function seedProduct() {
   await prisma.product.upsert({
     where: { description: 'product 01' },
     update: {},
@@ -37,10 +32,10 @@ async function main() {
     }
   })
 
-//*******************************************************************
-//************************** USER ***********************************
-//*******************************************************************
+}
 
+async function seedUser() {
+  
   await prisma.user.upsert({
     where: { userName: 'user 01' },
     update: {},
@@ -49,11 +44,11 @@ async function main() {
       email: 'user01@email.com',
       password: '123',
       carts: {
-        create: {
+        create: { //cart
           id: v4(),
           total: 120,
           items: {
-            create: [
+            create: [ //cartItems
               {
                 id: v4(),
                 productId: product1Id,
@@ -71,44 +66,13 @@ async function main() {
     },
   })
 
- 
+}
 
-  // await prisma.user.upsert({
-  //   where: { userName: 'user 02' },
-  //   update: {},
-  //   create: {
-  //     userName: 'user 02',
-  //     email: 'user02@email.com',
-  //     password: '123'
-  //   },
-  // })
+async function main() {
 
-  // PRODUCTS
+  await seedProduct();
+  await seedUser();
 
-
-  // await prisma.product.upsert({
-  //   where: { email: 'bob@prisma.io' },
-  //   update: {},
-  //   create: {
-  //     email: 'bob@prisma.io',
-  //     name: 'Bob',
-  //     posts: {
-  //       create: [
-  //         {
-  //           title: 'Follow Prisma on Twitter',
-  //           content: 'https://twitter.com/prisma',
-  //           published: true,
-  //         },
-  //         {
-  //           title: 'Follow Nexus on Twitter',
-  //           content: 'https://twitter.com/nexusgql',
-  //           published: true,
-  //         },
-  //       ],
-  //     },
-  //   },
-  // })
- 
 }
 main()
   .then(async () => {

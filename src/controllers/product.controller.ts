@@ -12,7 +12,7 @@ export class ProductController {
         res.send(products)
     }
 
-    async getById(req: Request, res: Response) {
+    async getById(req: Request<{id: string}>, res: Response) {
         const {id} = req.params;
         const product: ResponseBody<Product> | null = await productService.getById(id);
 
@@ -20,20 +20,20 @@ export class ProductController {
 
     }
 
-    async create(req: Request, res: Response) {
+    async create(req: Request<{}, {}, Omit<Product, 'id'>>, res: Response) {
         const product: ResponseBody<Product> | null  = await productService.create({...req.body});
 
         res.status(product!.statusCode).json(product?.response);
     }
 
-    async update(req: Request, res: Response) {
+    async update(req: Request<{id: string}, {}, Omit<Product, 'id'>>, res: Response) {
         const {id} = req.params;
         const product: ResponseBody<Product> | null = await productService.update(id, {...req.body});
 
         res.status(product!.statusCode).json(product?.response);
     }
 
-    async delete(req: Request, res: Response) {
+    async delete(req: Request<{id: string}>, res: Response) {
         const {id} = req.params;
         const product: ResponseBody<Product> | null = await productService.delete(id);
 
