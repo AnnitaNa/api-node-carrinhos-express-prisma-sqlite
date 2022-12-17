@@ -38,3 +38,12 @@ export class Conflict implements ResponseBody<string> {
         if (msg) this.response = msg;
     }
 }
+
+export class BadRequest implements ResponseBody<string> {
+    statusCode: number = 400
+    response: string = "there was a problem with the request"
+
+    constructor(msg?: string) {
+        if (msg) this.response = msg;
+    }
+}

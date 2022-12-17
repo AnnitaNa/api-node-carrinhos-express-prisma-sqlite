@@ -1,37 +1,22 @@
-import { Cart, PrismaClient, Product } from "@prisma/client";
+import { Cart} from "@prisma/client";
 import { v4 } from "uuid";
+
 import { Icart } from "../interfaces/Icart.interface";
 import { IcartItems } from "../interfaces/IcartItems.interfaces";
+import { BadRequest, OK, ResponseBody} from "../presenters/index.presenter";
+import { CartRepository } from "../repository/cart.repository";
+import { CartItemsRepository } from "../repository/cartItems.repository";
+import { ProductRepository } from "../repository/product.repository";
 
-import { Conflict, NotFound, OK, ResponseBody} from "../presenters/index.presenter";
 
-
-const prisma = new PrismaClient();
+const cartRepository = new CartRepository();
+const productRepository = new ProductRepository();
+const cartItemsRepository = new CartItemsRepository();
 
 export class CartService {
-    async getAll(): Promise<Cart[]> {
-        const cart = await prisma.cart.findMany(
-            {
-                select: {
-                    id: true,
-                    userId: true,
-                    total: true,
-                    items: {
-                        select: {
-                            product: {
-                                select: {
-                                    description: true,
-                                    brand: true,
-                                    price: true
-                                }
-                            },
-                            qtd: true
-                        }
 
-                    }
-                }
-            }
-        );
+    async getAll(): Promise<Cart[]> {
+        const cart = await cartRepository.getAll();
         return cart
     }
 
@@ -41,28 +26,11 @@ export class CartService {
 
         const totalValue = await this.totalValue(items)
 
-        const cart = await prisma.cart.create({
-            data: {
-                id: cartId,
-                userId,
-                total: totalValue
-            },
-            include: {
-                items: true
-            }
-        })
+        const cart = await cartRepository.createCart(cartId, totalValue, userId);
+        if(!cart) return new BadRequest();
 
         for (let item of items) {
-            const cartItem = await prisma.cartItems.create({
-                data: {
-                    id: v4(),
-                    cartId,
-                    productId: item.productId,
-                    qtd: item.qtd
-                }
-            }
-            
-            )
+            const cartItem = await cartItemsRepository.createCartItem(cartId, item);
         }
         return new OK(cart)
     }
@@ -71,11 +39,7 @@ export class CartService {
     async totalValue(items: IcartItems[]) {
         let valueByProduct =  await Promise.all(
          items.map(async (item) => {
-             let product = await prisma.product.findFirst({
-                 where: 
-                     {
-                         id: item.productId
-                     }})
+             let product = await productRepository.findProduct(item)
              return (Number(product?.price) * item.qtd)
           })
           
