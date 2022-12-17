@@ -8,7 +8,6 @@ import { CartRepository } from "../repository/cart.repository";
 import { CartItemsRepository } from "../repository/cartItems.repository";
 import { ProductRepository } from "../repository/product.repository";
 
-
 const cartRepository = new CartRepository();
 const productRepository = new ProductRepository();
 const cartItemsRepository = new CartItemsRepository();
@@ -39,7 +38,7 @@ export class CartService {
     async totalValue(items: IcartItems[]) {
         let valueByProduct =  await Promise.all(
          items.map(async (item) => {
-             let product = await productRepository.findProduct(item)
+             let product = await productRepository.findProduct({id: item.productId})
              return (Number(product?.price) * item.qtd)
           })
           

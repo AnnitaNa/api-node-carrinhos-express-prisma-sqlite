@@ -1,18 +1,18 @@
 import { PrismaClient, Product } from "@prisma/client";
 import { v4 } from "uuid";
-import { Conflict, NotFound, OK, ResponseBody} from "../presenters/index.presenter";
+import { BadRequest, Conflict, NotFound, OK, ResponseBody} from "../presenters/index.presenter";
+import { ProductRepository } from "../repository/product.repository";
 
-const prisma = new PrismaClient();
 
-
+const productRepository = new ProductRepository();
 export class ProductService {
     async getAll(): Promise<Product[]> {
-        const products = await prisma.product.findMany();
+        const products = await productRepository.getAll();
         return products
     }
 
     async getById(id: string): Promise<ResponseBody<Product> | null> {
-        const product = await this.findProduct({id});
+        const product = await productRepository.getById(id);
 
         if (!product) return new NotFound();
 
@@ -21,74 +21,38 @@ export class ProductService {
 
     async create({description, price, brand, qtd}: Omit<Product, 'id'>): Promise<ResponseBody<Product> | null> {
 
-        const productExists = await this.findProduct({description});
+        const productExists = await productRepository.findProduct({description});
 
         if (productExists) return new Conflict("There is already a product with this description")
         
-        const product = await prisma.product.create({
-            data: {
-                id: v4(),
-                description, 
-                price, 
-                brand,
-                qtd
-            }
-        })
+        const product = await productRepository.create({description, price, brand, qtd})
+        if(!product) return new BadRequest("It was not possible to create");
+
         return new OK(product)
     
     }
 
-    async update(id: string, {description, price, qtd}:  Omit<Product, 'id'>): Promise<ResponseBody<Product> | null> {
+    async update(id: string, {description, price, qtd, brand}:  Omit<Product, 'id'>): Promise<ResponseBody<Product> | null> {
         
-        const productExists = await this.findProduct({id});
+        const productExists = await productRepository.findProduct({id});
         if (!productExists) return new NotFound();
         
-        const product = await prisma.product.update({
-            data: {
-                description, 
-                price, 
-                qtd
-            },
-            where: {
-                id
-            }
-        })
+        const product = await productRepository.update(id, {description, price, qtd, brand});
+        if(!product) return new BadRequest("It was not possible to update");
+
         return new OK(product)
 
     }
 
     async delete(id: string): Promise<ResponseBody<Product> | null> {
         
-        const productExists = await this.findProduct({id});
+        const productExists = await productRepository.findProduct({id});
         if (!productExists) return new NotFound();
 
-        const product = await prisma.product.delete({
-            where: {
-                id
-            }
-        })
+        const product = await productRepository.delete(id);
+        if(!product) return new BadRequest("It was not possible to delete")
 
         return new OK(product)
     }
 
-    async findProduct(param: Partial<Product>) {
-
-        const {id, description} = param;
-
-        const productExists = await prisma.product.findFirst({
-            where: 
-                {
-                    id: this.isDefined(id),
-                    description: this.isDefined(description)
-                }
-        })
-
-        return productExists
-    }
-
-   private isDefined(T: any) {
-       return  T != null ? T : undefined
-       // if the property is not passed (null), it will put it values as undefined. 
-       //when undefined, Prisma does nothing with it
-    }
 }
