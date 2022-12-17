@@ -1,25 +1,16 @@
-import {Router, Request, Response} from 'express';
-import { PrismaClient } from '@prisma/client'
+import {Router} from 'express';
+import { UserController } from '../controllers/user.controller';
+import { userCreateValidation, userIdValidation, userUpdateValidation } from '../validators/user';
+import { validatesRequest } from '../middlewares/ValidatesRequest';
 
 export const userRoutes = Router();
 
-const prisma = new PrismaClient();
+const userController = new UserController();
 
-userRoutes.get("/", async (req: Request, res: Response) => {
-    const user = await prisma.user.findMany()
-    res.send(user)
-})
-
-userRoutes.post("/", async (req: Request, res: Response) => {
-    const {userName, password, email} = req.body
-    const user = await prisma.user.create({
-        data: {
-            userName,
-            password,
-            email
-        }
-    })
-    res.send(user)
-})
+userRoutes.get("/", userController.getAll)
+userRoutes.get("/:id", userIdValidation, validatesRequest, userController.getById)
+userRoutes.post("/", userCreateValidation, validatesRequest, userController.create)
+userRoutes.put("/:id", userUpdateValidation, validatesRequest, userController.update)
+userRoutes.delete("/:id", userIdValidation, validatesRequest, userController.delete)
 
 
