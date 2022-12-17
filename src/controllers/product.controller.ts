@@ -37,6 +37,6 @@ export class ProductController {
         const {id} = req.params;
         const product: ResponseBody<Product> | null = await productService.delete(id);
 
-        res.json(product)
+        res.status(product!.statusCode).json(product);
     }
 }
