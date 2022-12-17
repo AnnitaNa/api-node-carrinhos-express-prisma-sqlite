@@ -1,5 +1,5 @@
 import { PrismaClient, User } from "@prisma/client";
-import bcrypt, { hash } from 'bcrypt';
+import bcrypt from 'bcrypt';
 import { Conflict, NotFound, OK, ResponseBody} from "../presenters/index.presenter";
 
 const prisma = new PrismaClient();
@@ -60,6 +60,10 @@ export class UserService {
     }
 
     async delete(id: number): Promise<ResponseBody<User> | null> {
+
+        const userExists = await this.finduser({id});
+        if (!userExists) return new NotFound("User not found");
+
         const user = await prisma.user.delete({
             where: {
                 id

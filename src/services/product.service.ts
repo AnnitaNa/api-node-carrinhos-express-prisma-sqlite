@@ -58,6 +58,10 @@ export class ProductService {
     }
 
     async delete(id: string): Promise<ResponseBody<Product> | null> {
+        
+        const productExists = await this.findProduct({id});
+        if (!productExists) return new NotFound();
+
         const product = await prisma.product.delete({
             where: {
                 id
