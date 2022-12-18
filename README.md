@@ -1,4 +1,18 @@
-# what to do
+# Project
+
+> projeto final de oi devs
+>
+> Carrinho de compras utilizando node, express, prisma e Sqlite
+
+## How to run
+
+```bash
+npm i
+```
+
+```bash
+npm run dev
+```
 
 ## install
 
