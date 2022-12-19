@@ -47,3 +47,12 @@ export class BadRequest implements ResponseBody<string> {
         if (msg) this.response = msg;
     }
 }
+
+export class InternalServerError implements ResponseBody<any> {
+    statusCode: number = 500
+    response: string = "Internal Server Error"
+
+    constructor(msg?: string) {
+        if (msg) this.response = msg;
+    }
+}

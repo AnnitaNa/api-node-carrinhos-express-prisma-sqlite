@@ -3,7 +3,7 @@ import { v4 } from "uuid";
 
 import { Icart } from "../interfaces/Icart.interface";
 import { IcartItems } from "../interfaces/IcartItems.interfaces";
-import { BadRequest, OK, ResponseBody} from "../presenters/index.presenter";
+import { InternalServerError, OK, ResponseBody} from "../presenters/index.presenter";
 import { CartRepository } from "../repository/cart.repository";
 import { CartItemsRepository } from "../repository/cartItems.repository";
 import { ProductRepository } from "../repository/product.repository";
@@ -26,7 +26,7 @@ export class CartService {
         const totalValue = await this.totalValue(items)
 
         const cart = await cartRepository.createCart(cartId, totalValue, userId);
-        if(!cart) return new BadRequest();
+        if(!cart) return new InternalServerError();
 
         for (let item of items) {
             const cartItem = await cartItemsRepository.createCartItem(cartId, item);
