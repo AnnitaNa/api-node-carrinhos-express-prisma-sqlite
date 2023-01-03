@@ -1,5 +1,7 @@
+
+import { CartController } from "@controllers/cart.controller";
 import { Router } from "express";
-import { CartController } from "../controllers/cart.controller";
+
 
 export const cartRoutes = Router();
 

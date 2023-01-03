@@ -1,6 +1,6 @@
 import { User } from "@prisma/client";
-import { BadRequest, Conflict, NotFound, OK, ResponseBody} from "../presenters/index.presenter";
-import { UserRepository } from "../repository/user.repository";
+import { BadRequest, Conflict, NotFound, OK, ResponseBody} from "@presenters/index.presenter";
+import { UserRepository } from "@repository/user.repository";
 
 const userRepository = new UserRepository();
 export class UserService {

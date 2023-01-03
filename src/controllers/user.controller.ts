@@ -1,8 +1,9 @@
 
+import { ResponseBody } from "@presenters/index.presenter";
 import { User } from "@prisma/client";
+import { UserService } from "@services/user.service";
 import {Request, Response} from "express"
-import { ResponseBody } from "../presenters/index.presenter";
-import { UserService } from "../services/user.service";
+
 
 
 const userService = new UserService();

@@ -1,6 +1,6 @@
 import { Product } from "@prisma/client";
-import { BadRequest, Conflict, NotFound, OK, ResponseBody} from "../presenters/index.presenter";
-import { ProductRepository } from "../repository/product.repository";
+import { BadRequest, Conflict, NotFound, OK, ResponseBody} from "@presenters/index.presenter";
+import { ProductRepository } from "@repository/product.repository";
 
 
 const productRepository = new ProductRepository();

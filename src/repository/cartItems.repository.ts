@@ -1,5 +1,7 @@
-import { Cart, CartItems, PrismaClient, Product } from "@prisma/client";
-import { v4 } from "uuid";import { IcartItems } from "../interfaces/IcartItems.interfaces";
+import { IcartItems } from "@interfaces/IcartItems.interfaces";
+import { CartItems, PrismaClient } from "@prisma/client";
+import { v4 } from "uuid";
+
 
 const prisma = new PrismaClient();
 

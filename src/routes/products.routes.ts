@@ -1,7 +1,9 @@
+
 import {Router} from 'express';
-import { ProductController } from '../controllers/product.controller';
-import { validatesRequest } from '../middlewares/ValidatesRequest';
-import {productCreateValidation, productIdValidation, productUpdateValidation} from '../validators/product';
+
+import { ProductController } from '@controllers/product.controller';
+import { productCreateValidation, productIdValidation, productUpdateValidation } from '@validators/product';
+import { validatesRequest } from '@middlewares/ValidatesRequest';
 
 const productController = new ProductController();
 

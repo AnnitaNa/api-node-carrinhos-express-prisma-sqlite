@@ -1,7 +1,8 @@
 import {Router} from 'express';
-import { UserController } from '../controllers/user.controller';
-import { userCreateValidation, userIdValidation, userUpdateValidation } from '../validators/user';
-import { validatesRequest } from '../middlewares/ValidatesRequest';
+
+import { userCreateValidation, userIdValidation, userUpdateValidation } from '@validators/user'
+import { UserController } from '@controllers/user.controller';
+import { validatesRequest } from '@middlewares/ValidatesRequest';
 
 export const userRoutes = Router();
 
