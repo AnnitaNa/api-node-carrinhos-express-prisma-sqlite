@@ -1,10 +1,13 @@
+import { ICartRepository } from "@interfaces/ICartRepository.interface";
 import { Cart, PrismaClient} from "@prisma/client";
+import { inject, injectable } from "tsyringe";
 
-const prisma = new PrismaClient();
+@injectable()
+export class CartRepository implements ICartRepository {
+    constructor(@inject('PrismaClient') private readonly prisma: PrismaClient){}
 
-export class CartRepository {
     async getAll(): Promise<Cart[]> {
-        const cart = await prisma.cart.findMany(
+        const cart = await this.prisma.cart.findMany(
             {
                 select: {
                     id: true,
@@ -32,7 +35,7 @@ export class CartRepository {
 
     async createCart(id:string, total: number, userId: number): Promise<Cart | null> {
 
-        const cart = await prisma.cart.create({
+        const cart = await this.prisma.cart.create({
             data: {
                 id,
                 userId,

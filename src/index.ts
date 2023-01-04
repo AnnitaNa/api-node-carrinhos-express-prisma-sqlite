@@ -1,3 +1,5 @@
+import 'reflect-metadata';
+import './di/container';
 import express from 'express';
 import { routes } from './routes/index.routes';
 

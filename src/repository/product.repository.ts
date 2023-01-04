@@ -1,12 +1,15 @@
+import { IProductRepository } from "@interfaces/IProductRepository.interface";
 import { PrismaClient, Product } from "@prisma/client";
+import { inject, injectable } from "tsyringe";
 import { v4 } from "uuid";
 
-const prisma = new PrismaClient();
 
+@injectable()
+export class ProductRepository implements IProductRepository{
+    constructor(@inject('PrismaClient') private readonly prisma: PrismaClient){}
 
-export class ProductRepository {
     async getAll(): Promise<Product[]> {
-        const products = await prisma.product.findMany();
+        const products = await this.prisma.product.findMany();
         return products
     }
 
@@ -17,7 +20,7 @@ export class ProductRepository {
 
     async create({description, price, brand, qtd}: Omit<Product, 'id'>): Promise<Product | null> {
 
-        const product = await prisma.product.create({
+        const product = await this.prisma.product.create({
             data: {
                 id: v4(),
                 description, 
@@ -32,7 +35,7 @@ export class ProductRepository {
 
     async update(id: string, {description, price, qtd}:  Omit<Product, 'id'>): Promise<Product | null> {
         
-        const product = await prisma.product.update({
+        const product = await this.prisma.product.update({
             data: {
                 description, 
                 price, 
@@ -48,7 +51,7 @@ export class ProductRepository {
 
     async delete(id: string): Promise<Product | null> {
         
-        const product = await prisma.product.delete({
+        const product = await this.prisma.product.delete({
             where: {
                 id
             }
@@ -58,11 +61,11 @@ export class ProductRepository {
     }
 
     
-    async findProduct(param: Partial<Product>) {
+    async findProduct(param: Partial<Product>): Promise<Product | null> {
 
         const {id, description} = param;
 
-        const productExists = await prisma.product.findFirst({
+        const productExists = await this.prisma.product.findFirst({
             where: 
                 {
                     id: this.isDefined(id),

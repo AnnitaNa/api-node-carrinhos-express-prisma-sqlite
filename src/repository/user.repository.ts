@@ -1,13 +1,15 @@
+import { IUserRepository } from "@interfaces/IUserRepository.interface";
 import { PrismaClient, User } from "@prisma/client";
 import bcrypt from 'bcrypt';
+import { inject, injectable } from "tsyringe";
 
 
-const prisma = new PrismaClient();
+@injectable()
+export class UserRepository implements IUserRepository {
+    constructor(@inject('PrismaClient') private readonly prisma: PrismaClient){}
 
-
-export class UserRepository {
     async getAll(): Promise<User[]> {
-        const users = await prisma.user.findMany();
+        const users = await this.prisma.user.findMany();
         return users
     }
 
@@ -20,7 +22,7 @@ export class UserRepository {
 
         const hashPwd = await bcrypt.hash(password, 10);
 
-        const user = await prisma.user.create({
+        const user = await this.prisma.user.create({
             data: {
                 userName,
                 email,
@@ -35,7 +37,7 @@ export class UserRepository {
 
         const hashPwd = await bcrypt.hash(password, 10);
 
-        const user = await prisma.user.update({
+        const user = await this.prisma.user.update({
             data: {
                 userName,
                 email,
@@ -51,7 +53,7 @@ export class UserRepository {
 
     async delete(id: number): Promise<User | null> {
 
-        const user = await prisma.user.delete({
+        const user = await this.prisma.user.delete({
             where: {
                 id
             }
@@ -64,7 +66,7 @@ export class UserRepository {
 
         const {id, userName, email} = param;
 
-        const userExists = await prisma.user.findFirst({
+        const userExists = await this.prisma.user.findFirst({
             where: 
                 {
                     id: this.isDefined(id),
