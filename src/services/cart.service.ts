@@ -9,9 +9,14 @@ import { Cart} from "@prisma/client";
 import { inject, injectable } from "tsyringe";
 import { v4 } from "uuid";
 
+export interface ICartService {
+    getAll(): Promise<Cart[]>,
+    create({userId, items}: Icart): Promise<ResponseBody<Cart> | null>,
+    totalValue(items: IcartItems[]): Promise<number>
+}
 
 @injectable()
-export class CartService {
+export class CartService implements ICartService {
 
     constructor(
         @inject('ProductRepository') private productRepository: IProductRepository,
