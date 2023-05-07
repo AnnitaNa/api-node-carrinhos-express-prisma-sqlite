@@ -2,16 +2,17 @@
 
 > projeto final de oi devs
 >
-> Carrinho de compras utilizando node, express, prisma e Sqlite
+> Carrinho de compras utilizando node, express, prisma and postgres
 
+
+## Dependencies
+To run it, you need:
+* docker installed on your computer
+  
 ## How to run
 
 ```bash
-npm i
-```
-
-```bash
-npm run dev
+docker compose up
 ```
 
 ## install
@@ -55,13 +56,21 @@ migration and seeders
 
 1) create a seeder file inside prisma folder
 2) on package.json add:
+   
 ```json
 "prisma": {
     "seed": "ts-node prisma/seed.ts"
 },
 ```
-   when you migrate for the first time, it will also seed your database
+
+when you migrate for the first time, it will also seed your database
 
 ```bash
 npx prisma migrate dev --name migration-name
+```
+
+or you can seed it manually using:
+
+```bash
+npx prisma db seed
 ```
